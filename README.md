@@ -1,5 +1,42 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+🚀 NextProductHub
 
+NextProductHub is a simple product management application built with Next.js 15 (App Router) and NextAuth.js.
+It demonstrates both public and protected routes with authentication, product listing, product details, and a secure dashboard for adding products.
+
+🔹 Features
+
+🌐 Landing Page (Public)
+
+Includes Navbar, Hero, Product Highlights, and Footer
+
+Navigation to Login and Products
+
+🔑 Authentication
+
+Login with NextAuth.js (Google or credentials)
+
+Redirect to /products after login
+
+📦 Products
+
+/products: Public list of products
+
+/products/[id]: Public product details page
+
+🔒 Dashboard (Protected)
+
+/dashboard/add-product: Add new products (only when logged in)
+
+Redirects unauthenticated users to /login
+
+✨ Optional Enhancements
+
+Loading spinners during form submission
+
+Toast notifications after successful product addition
+
+Light/Dark theme toggle
 ## Getting Started
 
 First, run the development server:
