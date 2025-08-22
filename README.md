@@ -1,4 +1,5 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+
 🚀 NextProductHub
 
 NextProductHub is a simple product management application built with Next.js 15 (App Router) and NextAuth.js.
