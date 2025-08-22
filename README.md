@@ -52,6 +52,30 @@ pnpm dev
 bun dev
 ```
 
+## Live Demo
+[NextProductHub Live Site](https://product-nextjs-rosy.vercel.app/)
+
+---
+
+## GitHub Repository
+[NextProductHub Repository](https://github.com/HKabir12/product-nextjs-project)
+
+---
+
+## Setup & Installation
+
+### Prerequisites
+- Node.js >= 18.x
+- npm or yarn
+- MongoDB Atlas account (or local MongoDB)
+- Google OAuth Client ID & Secret (for Google login)
+
+### Installation Steps
+1. **Clone the repository**
+```bash
+git clone https://github.com/HKabir12/product-nextjs-project.git
+cd product-nextjs-project
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
