@@ -5,19 +5,19 @@ export default function Testimonials() {
     {
       name: "John Doe",
       role: "Entrepreneur",
-      image: "/mock-avatar.png",
+      image: "https://i.ibb.co.com/tpJqcGSB/antu.jpg",
       message: "This store has amazing products and excellent customer service!",
     },
     {
       name: "Jane Smith",
       role: "Designer",
-      image: "/mock-avatar.png",
+      image: "https://i.ibb.co.com/7xjtSZxj/kabir.jpg",
       message: "I love the product variety and the website is super easy to navigate.",
     },
     {
       name: "Ali Khan",
       role: "Developer",
-      image: "/mock-avatar.png",
+      image: "https://i.ibb.co.com/tMbhBq4Q/zabir.jpg",
       message: "High-quality products at reasonable prices. Highly recommended!",
     },
   ];
