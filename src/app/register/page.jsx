@@ -2,7 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import toast, { Toaster } from "react-hot-toast";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+const MySwal = withReactContent(Swal);
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -25,44 +28,58 @@ export default function RegisterPage() {
       const data = await res.json();
 
       if (res.ok) {
-        toast.success(data.message);
+        MySwal.fire({
+          icon: "success",
+          title: "Registration Successful 🎉",
+          text: data.message || "You can now log in to your account.",
+          timer: 2000,
+          showConfirmButton: false,
+        });
         setName("");
         setEmail("");
         setPassword("");
-        router.push("/login");
+        setTimeout(() => router.push("/login"), 2000);
       } else {
-        toast.error(data.message);
+        MySwal.fire({
+          icon: "error",
+          title: "Registration Failed ❌",
+          text: data.message || "Something went wrong. Please try again.",
+        });
       }
     } catch (error) {
-      toast.error("Error: " + error.message);
+      MySwal.fire({
+        icon: "error",
+        title: "Error",
+        text: error.message,
+      });
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
-      <Toaster />
-      <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-8 w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-6 text-center text-gray-800 dark:text-white">
-          Register
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-100 dark:bg-gray-900 p-4">
+      <div className="bg-white dark:bg-gray-800 shadow-2xl rounded-xl p-10 w-full max-w-md">
+        <h1 className="text-3xl font-bold mb-8 text-center text-gray-800 dark:text-white">
+          Create your account
         </h1>
-        <form onSubmit={handleSubmit} className="space-y-4">
+
+        <form onSubmit={handleSubmit} className="space-y-5">
           <input
             type="text"
             placeholder="Full Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
-            className="w-full px-3 py-2 border rounded"
+            className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-400 focus:outline-none dark:bg-gray-700 dark:text-white"
           />
           <input
             type="email"
-            placeholder="Email"
+            placeholder="Email Address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full px-3 py-2 border rounded"
+            className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-400 focus:outline-none dark:bg-gray-700 dark:text-white"
           />
           <input
             type="password"
@@ -70,16 +87,27 @@ export default function RegisterPage() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            className="w-full px-3 py-2 border rounded"
+            className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-400 focus:outline-none dark:bg-gray-700 dark:text-white"
           />
+
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:opacity-50"
+            className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg transition-colors disabled:opacity-50"
           >
             {loading ? "Registering..." : "Register"}
           </button>
         </form>
+
+        <p className="mt-6 text-center text-gray-600 dark:text-gray-300">
+          Already have an account?{" "}
+          <a
+            href="/login"
+            className="text-indigo-600 hover:text-indigo-800 font-medium"
+          >
+            Sign in
+          </a>
+        </p>
       </div>
     </div>
   );

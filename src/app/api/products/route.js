@@ -1,9 +1,15 @@
 import { dbConnect } from "@/lib/dbConnect";
 
+// GET all products
 export async function GET() {
   try {
     const collection = await dbConnect("products");
-    const products = await collection.find({}).toArray();
+
+    // Fetch all products with latest first, then higher price first
+    const products = await collection
+      .find({}, { projection: { name: 1, description: 1, price: 1, image: 1 } })
+      .sort({ createdAt: -1, price: -1 }) // latest first, then higher price first
+      .toArray();
 
     return Response.json(products, { status: 200 });
   } catch (error) {
@@ -12,11 +18,12 @@ export async function GET() {
   }
 }
 
+// POST create a new product
 export async function POST(request) {
   try {
-    const body = await request.json(); // read JSON body
+    const body = await request.json(); // Parse request body
 
-    const { name, description, price } = body;
+    const { name, description, price, image } = body;
 
     if (!name || !description || !price) {
       return Response.json(
@@ -31,6 +38,7 @@ export async function POST(request) {
       name,
       description,
       price,
+      image: image || null,
       createdAt: new Date(),
     });
 

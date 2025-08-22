@@ -10,9 +10,9 @@ export default function Footer() {
         
         {/* About Section */}
         <div>
-          <h2 className="text-xl font-bold text-white mb-4">MyStore</h2>
+          <h2 className="text-xl font-bold text-white mb-4">NextProductHub</h2>
           <p className="text-gray-400">
-            MyStore is a simple Next.js app showcasing products with public and protected pages.
+            NextProductHub is a simple Next.js app showcasing products with public and protected pages.
           </p>
         </div>
 
@@ -45,7 +45,7 @@ export default function Footer() {
       </div>
 
       <div className="mt-8 border-t border-gray-700 pt-4 text-center text-gray-500 text-sm">
-        &copy; {new Date().getFullYear()} MyStore. All rights reserved.
+        &copy; {new Date().getFullYear()} NextProductHub. All rights reserved.
       </div>
     </footer>
   )

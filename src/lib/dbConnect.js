@@ -6,11 +6,11 @@ let cachedDb = null;
 
 export async function dbConnect(collectionName) {
   if (cachedClient && cachedDb) {
-    console.log("✅ Using cached MongoDB connection");
+    console.log("Using cached MongoDB connection");
     return cachedDb.collection(collectionName);
   }
 
-  const client = new MongoClient(process.env.MONGODB_URI, {
+  const client = new MongoClient(process.env.NEXT_PUBLIC_MONGODB_URI, {
     serverApi: {
       version: ServerApiVersion.v1,
       strict: true,

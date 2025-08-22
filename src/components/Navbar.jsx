@@ -1,69 +1,143 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { signOut, useSession, SessionProvider } from "next-auth/react";
-import { FiHome, FiBox, FiLogIn, FiLogOut, FiPlusSquare } from "react-icons/fi";
+import { usePathname } from "next/navigation";
+import { useState, useEffect } from "react";
+import { signOut, useSession } from "next-auth/react";
+import { useTheme } from "next-themes";
+import {
+  FiHome,
+  FiBox,
+  FiLogIn,
+  FiLogOut,
+  FiPlusSquare,
+  FiChevronDown,
+} from "react-icons/fi";
+import { BsSun, BsMoon } from "react-icons/bs";
 
-// Wrap Navbar content in SessionProvider
-const Navbar=()=> {
-  return (
-    <SessionProvider>
-      <NavbarContent />
-    </SessionProvider>
-  );
-}
-
-function NavbarContent() {
+function Navbar() {
   const { data: session } = useSession();
   const [isOpen, setIsOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  const pathname = usePathname();
+  const userImage = session?.user?.image || "/mock-avatar.png";
+
+  // Hydration fix
+  useEffect(() => setMounted(true), []);
+
+  // helper function for active links
+  const linkClasses = (path) =>
+    `flex items-center gap-1 px-3 py-2 rounded-md transition ${
+      pathname === path
+        ? "bg-blue-500 text-white"
+        : "text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
+    }`;
 
   return (
-    <nav className="bg-white dark:bg-gray-900 shadow-md">
+    <nav className="bg-white dark:bg-gray-900 shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-        <Link href="/" className="text-2xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
-          <FiHome /> MyStore
+        {/* Logo */}
+        <Link
+          href="/"
+          className="text-2xl font-bold text-gray-800 dark:text-white flex items-center gap-2"
+        >
+          <FiHome /> NextProductHub
         </Link>
 
-        {/* Hamburger */}
+        {/* Hamburger (Mobile) */}
         <div className="md:hidden">
-          <button onClick={() => setIsOpen(!isOpen)} className="text-gray-800 dark:text-white text-2xl">
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="text-gray-800 dark:text-white text-2xl"
+          >
             {isOpen ? "✕" : "☰"}
           </button>
         </div>
 
-        {/* Links */}
-        <div className={`flex-col md:flex md:flex-row md:items-center md:space-x-6 ${isOpen ? "flex" : "hidden"} md:flex`}>
-          <Link href="/" className="py-2 flex items-center gap-1 text-gray-700 dark:text-gray-200 hover:text-blue-500">
-            <FiHome /> Home
-          </Link>
-
-          <Link href="/products" className="py-2 flex items-center gap-1 text-gray-700 dark:text-gray-200 hover:text-blue-500">
-            <FiBox /> Products
-          </Link>
-          <Link href="/register" className="py-2 flex items-center gap-1 text-gray-700 dark:text-gray-200 hover:text-blue-500">
-                <FiPlusSquare /> Register
-              </Link>
-
-          {!session && (
-            <Link href="/login" className="py-2 flex items-center gap-1 text-gray-700 dark:text-gray-200 hover:text-blue-500">
-              <FiLogIn /> Login
+        {/* Nav Links */}
+        <div
+          className={`flex-col md:flex md:flex-row md:items-center md:space-x-6 w-full md:w-auto md:justify-center ${
+            isOpen ? "flex mt-4" : "hidden"
+          } md:flex`}
+        >
+          <div className="flex flex-col md:flex-row md:space-x-6 flex-grow justify-center">
+            <Link href="/" className={linkClasses("/")}>
+              <FiHome /> Home
             </Link>
-          )}
 
-          {session && (
-            <>
-              <Link href="/dashboard/add-product" className="py-2 flex items-center gap-1 text-gray-700 dark:text-gray-200 hover:text-blue-500">
-                <FiPlusSquare /> Dashboard
-              </Link>
+            <Link href="/products" className={linkClasses("/products")}>
+              <FiBox /> Products
+            </Link>
+          </div>
+
+          {/* Right side section */}
+          <div className="flex flex-col md:flex-row md:items-center md:space-x-4 mt-4 md:mt-0 md:ml-auto">
+            {/* 🌗 Theme Toggle */}
+            {mounted && (
               <button
-                onClick={() => signOut({ callbackUrl: "/" })}
-                className="py-2 flex items-center gap-1 text-gray-700 dark:text-gray-200 hover:text-red-500"
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                className="p-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
               >
-                <FiLogOut /> Logout
+                {theme === "dark" ? (
+                  <BsSun className="text-xl" />
+                ) : (
+                  <BsMoon className="text-xl" />
+                )}
               </button>
-            </>
-          )}
+            )}
+
+            {!session && (
+              <>
+                <Link href="/register" className={linkClasses("/register")}>
+                  <FiPlusSquare /> Register
+                </Link>
+                <Link href="/login" className={linkClasses("/login")}>
+                  <FiLogIn /> Login
+                </Link>
+              </>
+            )}
+
+            {session && (
+              <div className="relative">
+                <button
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  className="flex items-center gap-2 px-3 py-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
+                >
+                  <img
+                    src={userImage}
+                    alt="User Avatar"
+                    className="w-8 h-8 rounded-full object-cover border border-gray-300 dark:border-gray-600"
+                  />
+                  <FiChevronDown />
+                </button>
+
+                {/* Dropdown */}
+                {dropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-52 bg-white dark:bg-gray-800 shadow-lg rounded-md py-2 z-50">
+                    <div className="px-4 py-2 text-gray-800 dark:text-gray-200 border-b border-gray-200 dark:border-gray-700">
+                      <p className="font-semibold">{session.user.name}</p>
+                      <p className="text-sm">{session.user.email}</p>
+                    </div>
+                    <Link
+                      href="/dashboard/add-product"
+                      className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    >
+                      Dashboard
+                    </Link>
+                    <button
+                      onClick={() => signOut({ callbackUrl: "/" })}
+                      className="w-full text-left px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    >
+                      <FiLogOut className="inline mr-2" /> Logout
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </nav>

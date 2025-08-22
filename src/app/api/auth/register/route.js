@@ -6,7 +6,10 @@ export async function POST(req) {
     const { name, email, password } = await req.json();
 
     if (!name || !email || !password) {
-      return new Response(JSON.stringify({ message: "All fields are required" }), { status: 400 });
+      return new Response(
+        JSON.stringify({ success: false, message: "All fields are required" }),
+        { status: 400 }
+      );
     }
 
     const collection = await dbConnect("users");
@@ -14,7 +17,10 @@ export async function POST(req) {
     // Check if user already exists
     const existingUser = await collection.findOne({ email });
     if (existingUser) {
-      return new Response(JSON.stringify({ message: "User already exists" }), { status: 400 });
+      return new Response(
+        JSON.stringify({ success: false, message: "User already exists" }),
+        { status: 400 }
+      );
     }
 
     // Hash password
@@ -29,9 +35,16 @@ export async function POST(req) {
 
     await collection.insertOne(newUser);
 
-    return new Response(JSON.stringify({ message: "User registered successfully" }), { status: 201 });
+    // ✅ Send success = true so frontend can redirect
+    return new Response(
+      JSON.stringify({ success: true, message: "User registered successfully" }),
+      { status: 201 }
+    );
   } catch (error) {
     console.error("Registration error:", error);
-    return new Response(JSON.stringify({ message: "Failed to register user" }), { status: 500 });
+    return new Response(
+      JSON.stringify({ success: false, message: "Failed to register user" }),
+      { status: 500 }
+    );
   }
 }
