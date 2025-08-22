@@ -5,31 +5,27 @@ export async function GET() {
   try {
     const collection = await dbConnect("products");
 
-    // Fetch all products with latest first, then higher price first
+    // Fetch all products, latest first, then higher price first
     const products = await collection
-      .find({}, { projection: { name: 1, description: 1, price: 1, image: 1 } })
-      .sort({ createdAt: -1, price: -1 }) // latest first, then higher price first
+      .find({}, { projection: { name: 1, description: 1, price: 1, image: 1, isFeatured: 1, createdAt: 1 } })
+      .sort({ isFeatured: -1, createdAt: -1, price: -1 }) // Featured first, latest first, higher price first
       .toArray();
 
-    return Response.json(products, { status: 200 });
+    return new Response(JSON.stringify(products), { status: 200 });
   } catch (error) {
     console.error("Error fetching products:", error);
-    return Response.json({ message: "Failed to fetch products" }, { status: 500 });
+    return new Response(JSON.stringify({ message: "Failed to fetch products" }), { status: 500 });
   }
 }
 
 // POST create a new product
 export async function POST(request) {
   try {
-    const body = await request.json(); // Parse request body
-
-    const { name, description, price, image } = body;
+    const body = await request.json();
+    const { name, description, price, image, isFeatured } = body;
 
     if (!name || !description || !price) {
-      return Response.json(
-        { message: "Name, description and price are required" },
-        { status: 400 }
-      );
+      return new Response(JSON.stringify({ message: "Name, description and price are required" }), { status: 400 });
     }
 
     const collection = await dbConnect("products");
@@ -37,17 +33,15 @@ export async function POST(request) {
     const result = await collection.insertOne({
       name,
       description,
-      price,
+      price: Number(price), // ensure price is number
       image: image || null,
+      isFeatured: Boolean(isFeatured) || false, // default to false
       createdAt: new Date(),
     });
 
-    return Response.json(
-      { message: "Product created successfully", productId: result.insertedId },
-      { status: 201 }
-    );
+    return new Response(JSON.stringify({ message: "Product created successfully", productId: result.insertedId }), { status: 201 });
   } catch (error) {
     console.error("Error inserting product:", error);
-    return Response.json({ message: "Failed to create product" }, { status: 500 });
+    return new Response(JSON.stringify({ message: "Failed to create product" }), { status: 500 });
   }
 }

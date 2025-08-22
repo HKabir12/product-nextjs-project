@@ -51,7 +51,7 @@ export default function Hero() {
             className="w-full md:w-1/2"
           >
             <img
-              src="https://illustrations.popsy.co/blue/launch.svg"
+              src="https://cdn.mos.cms.futurecdn.net/v2/t:0,l:437,cw:1125,ch:1125,q:80,w:1125/KDtxxKuvtvDrxrx2ntEbWV.jpg"
               alt="Hero Illustration"
               className="w-full drop-shadow-lg"
             />

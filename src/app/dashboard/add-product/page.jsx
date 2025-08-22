@@ -10,7 +10,7 @@ const MySwal = withReactContent(Swal);
 export default function AddProductPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
-
+  const [isFeatured, setIsFeatured] = useState(false);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -32,7 +32,7 @@ export default function AddProductPage() {
       const res = await fetch("/api/products", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, description, price, image }),
+        body: JSON.stringify({ name, description, price, image, isFeatured }),
       });
 
       const data = await res.json();
@@ -49,6 +49,8 @@ export default function AddProductPage() {
         setDescription("");
         setPrice("");
         setImage("");
+        setIsFeatured(false);
+        router.push("/products");
       } else {
         MySwal.fire({
           icon: "error",
@@ -81,7 +83,7 @@ export default function AddProductPage() {
         <form className="space-y-5" onSubmit={handleSubmit}>
           <input
             type="text"
-            name="text"
+            name="name"
             placeholder="Product Name"
             className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-400 focus:outline-none dark:bg-gray-700 dark:text-white"
             value={name}
@@ -108,13 +110,29 @@ export default function AddProductPage() {
 
           <input
             type="url"
-            name="URL"
+            name="image"
             placeholder="Image URL"
             className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-400 focus:outline-none dark:bg-gray-700 dark:text-white"
             value={image}
             onChange={(e) => setImage(e.target.value)}
             required
           />
+
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={isFeatured}
+              onChange={(e) => setIsFeatured(e.target.checked)}
+              id="featured"
+              className="w-4 h-4"
+            />
+            <label
+              htmlFor="featured"
+              className="text-gray-700 dark:text-gray-200"
+            >
+              Featured
+            </label>
+          </div>
 
           <button
             type="submit"
